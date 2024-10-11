@@ -1,3 +1,5 @@
+all: check gen printnum
+
 check: pisano.o check_fib.c
 	cc pisano.o check_fib.c -lgmp -o check
 
@@ -14,4 +16,4 @@ printnum: printnum.c
 	cc printnum.c -lgmp -o printnum
 
 clean:
-	rm check periods gen pisano.o
+	rm check periods gen pisano.o printnum
