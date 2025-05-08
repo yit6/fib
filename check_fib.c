@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	for (int base = 2; base <= MAX_BASE; ++base) {
 		mpz_mod_ui(remainder, num, base);
 		lremainder = fib_remainder_base(index, base);
-		gmp_printf("base %ld: %ld, %Zd\n", base, lremainder, remainder);
+		gmp_printf("base %4ld: %4ld, %4Zd\n", base, lremainder, remainder);
 		if (mpz_cmp_ui(remainder, lremainder)) {
 			printf("Failed check\n");
 			return 0;
