@@ -3,6 +3,9 @@
 #include <gmp.h>
 #include <time.h>
 
+#include <flint/flint.h>
+#include <flint/fmpz.h>
+
 int main(int argc, char *argv[])
 {
 	// Get User Input
@@ -16,52 +19,54 @@ int main(int argc, char *argv[])
 	clock_t start_time = clock();
 	unsigned long long count = strtoll(argv[1], NULL, 10);
 
-	mpz_t a, b, c, d; // Current term, previous term, matrix terms
-	mpz_init_set_ui(a, 1);
-	mpz_init_set_ui(b, 0);
-	mpz_init_set_ui(c, 1);
-	mpz_init_set_ui(d, 0);
+	fmpz_t a, b, c, d; // Current term, previous term, matrix terms
+	fmpz_init_set_ui(a, 1);
+	fmpz_init_set_ui(b, 0);
+	fmpz_init_set_ui(c, 1);
+	fmpz_init_set_ui(d, 0);
 
-	mpz_t c2;
-	mpz_init(c2);
+	fmpz_t c2;
+	fmpz_init(c2);
+
+	flint_set_num_threads(4);
 
 	while (count) {
 		printf("\r%lld      \n", count);
 		if (count % 2 == 0) { // 2x boost
 			printf("[   ]\r[");
 			fflush(stdout);
-			mpz_mul(c2, c, c);
+			fmpz_mul(c2, c, c);
 			printf(".");
 			fflush(stdout);
-			mpz_mul(c, c, d);
+			fmpz_mul(c, c, d);
 			printf(".");
 			fflush(stdout);
-			mpz_mul_2exp(c, c, 1);
-			mpz_mul(d, d, d);
+			fmpz_mul_2exp(c, c, 1);
+			fmpz_mul(d, d, d);
 			printf(".");
 			fflush(stdout);
-			mpz_add(c, c, c2);
-			mpz_add(d, d, c2);
+			fmpz_add(c, c, c2);
+			fmpz_add(d, d, c2);
 
 			mcount += 3;
 			count /= 2;
 		} else { // Increment
 			printf("[    ]\r[");
 			fflush(stdout);
-			mpz_mul(c2, a, c);
+			fmpz_mul(c2, a, c);
 			printf(".");
 			fflush(stdout);
-			mpz_mul(a, a, d);
+			fmpz_mul(a, a, d);
 			printf(".");
 			fflush(stdout);
-			mpz_addmul(a, b, c);
+			fmpz_addmul(a, b, c);
 			printf(".");
 			fflush(stdout);
-			mpz_add(a, a, c2);
-			mpz_mul(b, b, d);
+			fmpz_add(a, a, c2);
+			fmpz_mul(b, b, d);
 			printf(".");
 			fflush(stdout);
-			mpz_add(b, b, c2);
+			fmpz_add(b, b, c2);
 			mcount += 4;
 			count--;
 		}
@@ -73,17 +78,17 @@ int main(int argc, char *argv[])
 	printf("\ncalculation time: %f seconds\n", taken);
 	printf("%lu multiplications taken\n", mcount);
 
-	FILE* fp = fopen("fib.mpz", "w");
-	mpz_out_raw(fp, b);
+	FILE* fp = fopen("fib.fmpz", "w");
+	fmpz_out_raw(fp, b);
 	fclose(fp);
 
-	printf("result saved to \'fib.mpz\'\n");
+	printf("result saved to \'fib.fmpz\'\n");
 
-	mpz_clear(a);
-	mpz_clear(b);
-	mpz_clear(c);
-	mpz_clear(d);
-	mpz_clear(c2);
+	fmpz_clear(a);
+	fmpz_clear(b);
+	fmpz_clear(c);
+	fmpz_clear(d);
+	fmpz_clear(c2);
 
 	return 0;
 }

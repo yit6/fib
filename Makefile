@@ -7,13 +7,13 @@ periods: pisano.o pisano_periods.c
 	cc pisano.o pisano_periods.c -o periods
 
 gen: gen_fib.c
-	cc gen_fib.c -lgmp -o gen
+	cc gen_fib.c -lgmp -o gen -lflint
 
 pisano.o: pisano.c
 	cc -c pisano.c
 
 printnum: printnum.c
-	cc printnum.c -lgmp -o printnum
+	cc printnum.c -lgmp -o printnum -lflint
 
 clean:
 	rm check periods gen pisano.o printnum
